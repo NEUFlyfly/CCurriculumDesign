@@ -259,20 +259,11 @@ void Adjust_Category(char *good_name, char *new_category)
     
 }
 
-// 输入顾客信息并生成文件
+// 输入顾客信息
 void CustomerInfo_Generate()
 {
-    // 先清屏
-
     char name[50], type[20], contact[50]; // 使用数组代替未初始化的指针
-    // 清空customerInfo.txt文件
-    FILE *fp = fopen("customerInfo.txt", "w");
-    if (fp == NULL)
-    {
-        printf("文件打开失败！\n");
-        exit(1);
-    }
-    fclose(fp);
+
     // 循环输入顾客信息，输入'#'结束输入
     while (1)
     {
@@ -291,16 +282,36 @@ void CustomerInfo_Generate()
         strcpy(customer.type, type);
         strcpy(customer.contact, contact);
         Insert_CustomerList(&customer_list, customer);
-        // 将顾客信息写入文件
-        FILE *fp1 = fopen("customerInfo.txt", "a");
-        if (fp1 == NULL)
-        {
-            printf("文件打开失败！\n");
-            exit(1);
-        }
-        fprintf(fp1, "%s %s %s\n", customer.name, customer.type, customer.contact);
-        fclose(fp1);
     }
+    // 生成顾客信息文件
+    Create_CustomerInfo_File();
+}
+
+void Create_CustomerInfo_File()
+{
+    //先清空文件
+    FILE *fp = fopen("customerInfo.txt", "w");
+    if (fp == NULL)
+    {
+        printf("文件打开失败！\n");
+        exit(1);
+    }
+    fclose(fp);
+    // 按照customer_list的顺序写入文件
+    CustomerNode *p = customer_list->next;
+    FILE *fp1 = fopen("customerInfo.txt", "a");
+    if (fp1 == NULL)
+    {
+        printf("文件打开失败！\n");
+        exit(1);
+    }
+    while (p != NULL)
+    {
+        fprintf(fp1, "%d %s %s %s\n", p->id, p->name, p->type, p->contact);
+        p = p->next;
+    }
+    fclose(fp1);
+    printf("顾客信息已更新\n");
 }
 
 void Add_Customer_To_System()
@@ -339,6 +350,7 @@ void Delete_Customer_From_System()
         getchar(); // 清除上一次输入的换行符
         getchar(); // 等待用户按回车
     }
+    Create_CustomerInfo_File();
 }
 
 void Adjust_Customer_Type()
@@ -374,4 +386,5 @@ void Adjust_Customer_Type()
         system("cls");
         printf("顾客类型已修改！\n");
     }
+    Create_CustomerInfo_File();
 }

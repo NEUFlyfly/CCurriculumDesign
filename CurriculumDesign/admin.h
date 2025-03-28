@@ -15,6 +15,6 @@ void CustomerInfo_Generate();
 void Add_Customer_To_System();
 void Delete_Customer_From_System();
 void Adjust_Customer_Type();
-
+void Create_CustomerInfo_File();
 
 #endif // ADMIN_H_INCLUDED
