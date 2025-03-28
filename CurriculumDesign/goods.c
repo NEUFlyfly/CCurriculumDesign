@@ -53,35 +53,6 @@ void Delete_CategoryList(CategoryList *list, char *good_name)
     free(curr);
 }
 
-// 创建空的Sale链表
-void Init_SaleList(SaleList *list)
-{
-    *list = (SaleList)malloc(sizeof(SaleNode));
-    if (*list == NULL)
-    {
-        printf("内存分配失败！\n");
-        exit(1);
-    }
-    (*list)->next = NULL;
-}
-
-// 插入新的销售记录到Sale链表，头插法
-void Insert_SaleList(SaleList *list, SaleNode sale)
-{
-    SaleNode *newnode = (SaleNode *)malloc(sizeof(SaleNode));
-    newnode->quantity = sale.quantity;
-    newnode->sale_price = sale.sale_price;
-    strcpy(newnode->good_name, sale.good_name);
-
-    if (newnode == NULL)
-    {
-        printf("内存分配失败！\n");
-        exit(1);
-    }
-    newnode->next = (*list)->next;
-    (*list)->next = newnode;
-}
-
 // 创建空的AllCategory链表
 void Init_AllCategoryList(AllCategoryList *list)
 {
@@ -141,7 +112,14 @@ void Print_AllCategoryList(AllCategoryList list)
             printf("    商品类别：%s\n", q->good.category);
             printf("    生产厂家：%s\n", q->good.manufacturer);
             printf("    销售价格：%.2f\n", q->good.price);
-            printf("    库存数量：%d\n\n", q->good.stock);
+            printf("    库存数量：%d\n", q->good.stock);
+            printf("    是否促销：%s\n", q->good.is_promotion ? "是" : "否");
+            if (q->good.is_promotion)
+            {
+                printf("    促销价格：%.2f\n", q->good.promotion_price);
+            }
+            else printf("    正常价格：%.2f\n", q->good.price);
+            printf("\n");
             q = q->next;
         }
         p = p->next;

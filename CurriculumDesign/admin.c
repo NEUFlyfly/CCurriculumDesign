@@ -3,6 +3,7 @@
 #include "purchase.h"
 #include "customer.h"
 #include "stdlib.h"
+#include "system.h"
 
 #include <time.h>
 #include <stdio.h>
@@ -28,7 +29,7 @@ void Adjust_Customer_Type();
 // 即增加商品信息
 void Purchase(char *category, char *good_name, float cost_price, int quantity, char *supplier)
 {
-
+    static int id_counter = 0; // 用于自动生成商品编号
     static int first_time = 1; // 用于判断是否第一次调用Purchase函数，如果是第一次调用，则清空purchaseInfo.txt文件
     if (first_time)
     {
@@ -44,10 +45,8 @@ void Purchase(char *category, char *good_name, float cost_price, int quantity, c
 
 
 
-    char current_time[9];
-    time_t now = time(NULL);
-    struct tm *local = localtime(&now);
-    snprintf(current_time, sizeof(current_time), "%02d:%02d:%02d", local->tm_hour, local->tm_min, local->tm_sec);
+    char current_time[10];
+    GetCurrentTime(current_time);
 
     // 1. 创建新的进货记录
     PurchaseNode purchase;
@@ -58,6 +57,8 @@ void Purchase(char *category, char *good_name, float cost_price, int quantity, c
     purchase.quantity = quantity;
     purchase.cost_price = cost_price;
     Insert_PurchaseList(&purchase_record, purchase);
+
+
     // 2. 更新商品库存
     // 查找all_category_list中是否有category
     AllCategoryNode *allListptr = all_category_list->next;
@@ -78,6 +79,10 @@ void Purchase(char *category, char *good_name, float cost_price, int quantity, c
         strcpy(good.manufacturer, supplier);
         good.price = cost_price;
         good.stock = quantity;
+        good.is_promotion = 0; // 默认不促销
+        good.promotion_price = 0.0; // 默认促销价格为0.0
+        good.id = ++id_counter; // 自动生成商品编号
+
         Insert_CategoryList(&category_list, good);
     }
     else // 找到该类别了，那么allListptr指向该类别
@@ -387,4 +392,137 @@ void Adjust_Customer_Type()
         printf("顾客类型已修改！\n");
     }
     Create_CustomerInfo_File();
+}
+
+// 管理商品售价
+void Set_Good_Price()
+{
+    system("cls");
+    printf("商品售价设置：\n已有的所有商品信息如下：\n");
+    // 先显示所有商品信息
+    Print_AllCategoryList(all_category_list);
+    
+    //循环处理，输入#退出
+    while (1)
+    {
+        char good_name[50];
+        printf("请输入要设置售价的商品名称（输入'#'退出）：");
+        scanf("%49s", good_name);
+        if (strcmp(good_name, "#") == 0)
+        {
+            break; // 退出设置售价模式
+        }
+        // 找到名称为good_name的商品后，设置其售价
+        AllCategoryNode *allListptr = all_category_list->next;
+        CategoryNode *targetGoodNode = NULL;
+        while (allListptr != NULL)
+        {
+            CategoryList category_list = allListptr->categorylist;
+            CategoryNode *categoryListptr = category_list->next;
+            while (categoryListptr != NULL)
+            {
+                if (strcmp(categoryListptr->good.good_name, good_name) == 0)
+                {
+                    targetGoodNode = categoryListptr; // 找到目标商品
+                    break;
+                }
+                categoryListptr = categoryListptr->next;
+            }
+            if (targetGoodNode != NULL)
+            {
+                break; // 找到商品后退出循环
+            }
+            allListptr = allListptr->next;
+        }
+        if (targetGoodNode == NULL)
+        {
+            printf("未找到名称为 %s 的商品！重新输入\n", good_name);
+            continue;
+        }
+        // 找到商品后，设置售价
+        float new_price;
+        printf("请输入新的售价：");
+        scanf("%f", &new_price);
+        targetGoodNode->good.price = new_price;
+        printf("%s售价已设置为：%.2f\n",targetGoodNode->good.good_name, new_price);
+
+    }
+}
+
+// 管理商品促销信息
+void Set_Good_Promotion_Info()
+{
+    system("cls");
+    printf("商品促销信息设置：\n已有的所有商品信息如下：\n");
+    // 先显示所有商品信息
+    Print_AllCategoryList(all_category_list);
+    
+    //循环处理，输入#退出
+    while (1)
+    {
+        char good_name[50];
+        printf("请输入要设置促销信息的商品名称（输入'#'退出）：");
+        scanf("%49s", good_name);
+        if (strcmp(good_name, "#") == 0)
+        {
+            break; // 退出设置促销信息模式
+        }
+        // 找到名称为good_name的商品后，设置其为促销或不促销
+        //设置为促销则输入xx%促销比例，定价乘促销比例即为促销价格，设置为不促销则使促销价格为0
+        AllCategoryNode *allListptr = all_category_list->next;
+        CategoryNode *targetGoodNode = NULL;
+        while (allListptr != NULL)
+        {
+            CategoryList category_list = allListptr->categorylist;
+            CategoryNode *categoryListptr = category_list->next;
+            while (categoryListptr != NULL)
+            {
+                if (strcmp(categoryListptr->good.good_name, good_name) == 0)
+                {
+                    targetGoodNode = categoryListptr; // 找到目标商品
+                    break;
+                }
+                categoryListptr = categoryListptr->next;
+            }
+            if (targetGoodNode != NULL)
+            {
+                break; // 找到商品后退出循环
+            }
+            allListptr = allListptr->next;
+        }
+        if (targetGoodNode == NULL)
+        {
+            printf("未找到名称为 %s 的商品！重新输入\n", good_name);
+            continue;
+        }
+        // 找到商品后，设置促销信息
+        char promotion_info[20];
+        printf("请输入是否促销，1设置为促销，0设置为不促销：");
+        int is_promotion;
+        scanf("%d", &is_promotion);
+        if (is_promotion == 1)
+        {
+            printf("请输入促销比例（例如输入0.8表示打8折）：");
+            float promotion_rate;
+            scanf("%f", &promotion_rate);
+            targetGoodNode->good.is_promotion = 1;
+            targetGoodNode->good.promotion_price = targetGoodNode->good.price * promotion_rate;
+            sprintf(promotion_info, "%.2f", promotion_rate * 10); // 保留一位小数
+            strcat(promotion_info, "折");
+        }
+        else
+        {
+            targetGoodNode->good.is_promotion = 0;
+            targetGoodNode->good.promotion_price = 0.0;
+            strcpy(promotion_info, "不促销");
+        }
+        printf("%s促销信息已设置为：%s\n",targetGoodNode->good.good_name, promotion_info);
+
+    }
+
+
+    
+    
+    
+
 }

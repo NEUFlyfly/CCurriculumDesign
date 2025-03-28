@@ -16,5 +16,7 @@ void Add_Customer_To_System();
 void Delete_Customer_From_System();
 void Adjust_Customer_Type();
 void Create_CustomerInfo_File();
+void Set_Good_Price();
+void Set_Good_Promotion_Info();
 
 #endif // ADMIN_H_INCLUDED

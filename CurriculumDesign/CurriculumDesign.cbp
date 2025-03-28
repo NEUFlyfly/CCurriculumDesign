@@ -50,10 +50,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="purchase.h" />
+		<Unit filename="sale.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sale.h" />
 		<Unit filename="salesperson.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="salesperson.h" />
+		<Unit filename="system.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="system.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

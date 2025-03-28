@@ -7,6 +7,6 @@ typedef struct Salesperson
     char password[20];
 } Salesperson;
 
-
+void Sale(int customer_id, char *good_name, int quantity);
 
 #endif // SALESPERSON_H_INCLUDED

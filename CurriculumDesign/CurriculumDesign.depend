@@ -1,47 +1,57 @@
 # depslib dependency file v1.0
-1743083547 source:c:\users\18303\desktop\code\curriculumdesign\goods.c
+1743163925 source:c:\users\18303\desktop\code\curriculumdesign\goods.c
 	"goods.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1743084010 c:\users\18303\desktop\code\curriculumdesign\goods.h
+1743161951 c:\users\18303\desktop\code\curriculumdesign\goods.h
+	"sale.h"
 
-1742993903 source:c:\users\18303\desktop\code\curriculumdesign\salesperson.c
-
-1743075834 source:c:\users\18303\desktop\code\curriculumdesign\system.c
+1743163228 source:c:\users\18303\desktop\code\curriculumdesign\salesperson.c
+	"salesperson.h"
+	"sale.h"
 	"goods.h"
+	"purchase.h"
+	"customer.h"
 	"system.h"
-	<stdio.h>
 	<stdlib.h>
+	<stdio.h>
 	<string.h>
 
-1743075834 c:\users\18303\desktop\code\curriculumdesign\system.h
-	"goods.h"
+1743156576 source:c:\users\18303\desktop\code\curriculumdesign\system.c
+	"system.h"
+	<time.h>
+	<stdio.h>
+	<string.h>
 
-1743123609 source:c:\users\18303\desktop\code\curriculumdesign\main.c
+1743156599 c:\users\18303\desktop\code\curriculumdesign\system.h
+
+1743163778 source:c:\users\18303\desktop\code\curriculumdesign\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
+	"system.h"
 	"purchase.h"
 	"goods.h"
 	"admin.h"
 	"customer.h"
 
-1743124246 source:c:\users\18303\desktop\code\curriculumdesign\admin.c
+1743163228 source:c:\users\18303\desktop\code\curriculumdesign\admin.c
 	"admin.h"
 	"goods.h"
 	"purchase.h"
 	"customer.h"
 	"stdlib.h"
+	"system.h"
 	<time.h>
 	<stdio.h>
 	<string.h>
 
-1743125322 c:\users\18303\desktop\code\curriculumdesign\admin.h
+1743163228 c:\users\18303\desktop\code\curriculumdesign\admin.h
 
-1743076545 c:\users\18303\desktop\code\curriculumdesign\purchase.h
+1743156576 c:\users\18303\desktop\code\curriculumdesign\purchase.h
 
 1743079929 source:c:\users\18303\desktop\code\curriculumdesign\purchase.c
 	"purchase.h"
@@ -54,4 +64,14 @@
 	<stdlib.h>
 	<string.h>
 	<stdio.h>
+
+1743158906 c:\users\18303\desktop\code\curriculumdesign\sale.h
+
+1743158921 source:c:\users\18303\desktop\code\curriculumdesign\sale.c
+	"sale.h"
+	"stdlib.h"
+	<stdio.h>
+	<string.h>
+
+1743163228 c:\users\18303\desktop\code\curriculumdesign\salesperson.h
 
