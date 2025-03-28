@@ -1,0 +1,57 @@
+# depslib dependency file v1.0
+1743083547 source:c:\users\18303\desktop\code\curriculumdesign\goods.c
+	"goods.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1743084010 c:\users\18303\desktop\code\curriculumdesign\goods.h
+
+1742993903 source:c:\users\18303\desktop\code\curriculumdesign\salesperson.c
+
+1743075834 source:c:\users\18303\desktop\code\curriculumdesign\system.c
+	"goods.h"
+	"system.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1743075834 c:\users\18303\desktop\code\curriculumdesign\system.h
+	"goods.h"
+
+1743097697 source:c:\users\18303\desktop\code\curriculumdesign\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"purchase.h"
+	"goods.h"
+	"admin.h"
+	"customer.h"
+
+1743097850 source:c:\users\18303\desktop\code\curriculumdesign\admin.c
+	"admin.h"
+	"goods.h"
+	"purchase.h"
+	"customer.h"
+	"stdlib.h"
+	<time.h>
+	<stdio.h>
+	<string.h>
+
+1743097563 c:\users\18303\desktop\code\curriculumdesign\admin.h
+
+1743076545 c:\users\18303\desktop\code\curriculumdesign\purchase.h
+
+1743079929 source:c:\users\18303\desktop\code\curriculumdesign\purchase.c
+	"purchase.h"
+	"stdlib.h"
+
+1743097563 c:\users\18303\desktop\code\curriculumdesign\customer.h
+
+1743097563 source:c:\users\18303\desktop\code\curriculumdesign\customer.c
+	"customer.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+

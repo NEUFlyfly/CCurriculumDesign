@@ -1,0 +1,9 @@
+fruit apple 3.50 100 00:47:38 supplier1
+fruit banana 2.50 200 00:47:38 supplier2
+fruit orange 4.00 150 00:47:38 supplier3
+drink coke 1.50 300 00:47:38 supplier4
+drink pepsi 1.80 250 00:47:38 supplier5
+drink sprite 1.60 400 00:47:38 supplier6
+snack chips 2.00 500 00:47:38 supplier7
+snack cookies 3.00 350 00:47:38 supplier8
+snack chocolate 2.50 600 00:47:38 supplier9
