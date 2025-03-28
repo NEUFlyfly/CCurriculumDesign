@@ -262,6 +262,8 @@ void Adjust_Category(char *good_name, char *new_category)
 // 输入顾客信息并生成文件
 void CustomerInfo_Generate()
 {
+    // 先清屏
+
     char name[50], type[20], contact[50]; // 使用数组代替未初始化的指针
     // 清空customerInfo.txt文件
     FILE *fp = fopen("customerInfo.txt", "w");
@@ -303,6 +305,7 @@ void CustomerInfo_Generate()
 
 void Add_Customer_To_System()
 {
+    system("cls");
     printf("请输入添加的顾客信息：\n");
     CustomerInfo_Generate();
     printf("顾客信息已添加到系统！\n");
@@ -310,8 +313,10 @@ void Add_Customer_To_System()
 
 void Delete_Customer_From_System()
 {
+    
     while (1)
     {
+        system("cls");
         printf("已存储的顾客信息：\n");
         Print_CustomerList(customer_list);
         int id;
@@ -323,13 +328,22 @@ void Delete_Customer_From_System()
             break; // 退出删除模式
         }
         id = atoi(input); // 将输入转换为整数
-        Delete_CustomerList(&customer_list, id);
-        printf("顾客信息已删除！\n");
+        if(Delete_CustomerList(&customer_list, id) == 1)
+        {
+            printf("顾客信息已删除！按回车继续...\n");
+        }
+        else
+        {
+            printf("未找到该顾客！按回车继续...\n");
+        }
+        getchar(); // 清除上一次输入的换行符
+        getchar(); // 等待用户按回车
     }
 }
 
 void Adjust_Customer_Type()
 {
+    system("cls");
     while (1)
     {
         printf("已存储的顾客信息：\n");
@@ -357,6 +371,7 @@ void Adjust_Customer_Type()
             continue;
         }
         strcpy(p->type, new_type);
+        system("cls");
         printf("顾客类型已修改！\n");
     }
 }

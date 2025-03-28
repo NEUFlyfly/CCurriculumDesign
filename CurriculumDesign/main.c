@@ -21,7 +21,7 @@ int main()
 	CustomerInfo_Generate();
 
 	Print_CustomerList(customer_list);
-    printf("111");
+
 	// µ÷Õû¹Ë¿ÍType
 	Adjust_Customer_Type();
 	Print_CustomerList(customer_list);

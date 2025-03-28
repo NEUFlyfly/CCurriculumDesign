@@ -19,7 +19,7 @@
 1743075834 c:\users\18303\desktop\code\curriculumdesign\system.h
 	"goods.h"
 
-1743097697 source:c:\users\18303\desktop\code\curriculumdesign\main.c
+1743123609 source:c:\users\18303\desktop\code\curriculumdesign\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -29,7 +29,7 @@
 	"admin.h"
 	"customer.h"
 
-1743097850 source:c:\users\18303\desktop\code\curriculumdesign\admin.c
+1743124246 source:c:\users\18303\desktop\code\curriculumdesign\admin.c
 	"admin.h"
 	"goods.h"
 	"purchase.h"
@@ -47,9 +47,9 @@
 	"purchase.h"
 	"stdlib.h"
 
-1743097563 c:\users\18303\desktop\code\curriculumdesign\customer.h
+1743122363 c:\users\18303\desktop\code\curriculumdesign\customer.h
 
-1743097563 source:c:\users\18303\desktop\code\curriculumdesign\customer.c
+1743123386 source:c:\users\18303\desktop\code\curriculumdesign\customer.c
 	"customer.h"
 	<stdlib.h>
 	<string.h>

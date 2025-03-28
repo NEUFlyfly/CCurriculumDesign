@@ -6,7 +6,7 @@
 // 函数声明
 void Init_CustomerList(CustomerList *list);
 void Insert_CustomerList(CustomerList *list, CustomerNode customer);
-void Delete_CustomerList(CustomerList *list, int id);
+int Delete_CustomerList(CustomerList *list, int id);
 void Print_CustomerList(CustomerList list);
 
 void Init_CustomerList(CustomerList *list)
@@ -39,7 +39,7 @@ void Insert_CustomerList(CustomerList *list, CustomerNode customer)// 每次加入一
     (*list)->next = newnode;
 }
 
-void Delete_CustomerList(CustomerList *list, int id)
+int Delete_CustomerList(CustomerList *list, int id)
 {
     CustomerNode *prev = *list;
     CustomerNode *curr = (*list)->next;
@@ -53,11 +53,12 @@ void Delete_CustomerList(CustomerList *list, int id)
     if (curr == NULL)
     {
         printf("未找到该顾客！\n");
-        return;
+        return 0;
     }
 
     prev->next = curr->next;
     free(curr);
+    return 1;
 }
 
 void Print_CustomerList(CustomerList list)
