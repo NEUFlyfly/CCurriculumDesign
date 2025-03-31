@@ -109,7 +109,7 @@ void Purchase(char *category, char *good_name, float cost_price, int quantity, c
         }
     }
 
-    // 3. 保存进货日志到purchaseInfo.txt，格式：商品类别 商品名称 进货单价 进货数量 实际时间（例如13:05） 供应商名称
+    // 3. 保存进货日志到purchaseInfo.txt，格式：商品类别 商品名称 进货单价 进货数量 实际时间 供应商名称
     // 获取当前时间并格式化为字符串
 
     FILE *fp = fopen("purchaseInfo.txt", "a");
@@ -261,7 +261,7 @@ void Adjust_Category(char *good_name, char *new_category)
     strcpy(updatedGood.category, new_category);
     strcpy(updatedGood.good_name, good_name); // 更新商品的类别信息
     Insert_CategoryList(&newCategoryNode->categorylist, updatedGood);
-    
+
 }
 
 // 输入顾客信息
@@ -279,10 +279,22 @@ void CustomerInfo_Generate()
         {
             break; // 输入'#'结束循环
         }
-        printf("请输入顾客类型（NORMAL VIP SVIP）：");
-        scanf("%19s", type); // 限制输入长度
+        while (1)
+        {
+            printf("请输入顾客类型（normal vip svip）：");
+            scanf("%19s", type); // 限制输入长度
+            if (strcmp(type, "normal") == 0 || strcmp(type, "vip") == 0 || strcmp(type, "svip") == 0)
+            {
+            break; // 输入合法，退出循环
+            }
+            else
+            {
+            printf("输入的顾客类型无效，请重新输入！\n");
+            }
+        }
         printf("请输入顾客联系方式：");
         scanf("%49s", contact); // 限制输入长度
+        printf("顾客信息已添加到系统！\n\n");
         strcpy(customer.name, name);
         strcpy(customer.type, type);
         strcpy(customer.contact, contact);
@@ -324,17 +336,16 @@ void Add_Customer_To_System()
     system("cls");
     printf("请输入添加的顾客信息：\n");
     CustomerInfo_Generate();
-    printf("顾客信息已添加到系统！\n");
 }
 
 void Delete_Customer_From_System()
 {
-    
+
     while (1)
     {
-        system("cls");
-        printf("已存储的顾客信息：\n");
+        
         Print_CustomerList(customer_list);
+        printf("已存储的顾客信息如上，供参考\n");
         int id;
         printf("请输入要删除的顾客编号（输入'#'退出删除）：");
         char input[10];
@@ -346,28 +357,22 @@ void Delete_Customer_From_System()
         id = atoi(input); // 将输入转换为整数
         if(Delete_CustomerList(&customer_list, id) == 1)
         {
-            printf("顾客信息已删除！按回车继续...\n");
+            printf("顾客信息已删除！\n\n");
         }
-        else
-        {
-            printf("未找到该顾客！按回车继续...\n");
-        }
-        getchar(); // 清除上一次输入的换行符
-        getchar(); // 等待用户按回车
+        else printf("请重新输入\n\n");
+        
     }
     Create_CustomerInfo_File();
 }
 
 void Adjust_Customer_Type()
 {
-    system("cls");
+
     while (1)
     {
-        printf("已存储的顾客信息：\n");
-        Print_CustomerList(customer_list);
         int id;
         char new_type[30];
-        printf("请输入要修改的顾客编号（输入'#'退出调整）：");
+        printf("请输入要修改的顾客id（输入'#'退出调整）：");
         char input[10];
         scanf("%s", input);
         if (strcmp(input, "#") == 0)
@@ -375,8 +380,6 @@ void Adjust_Customer_Type()
             break; // 退出调整模式
         }
         id = atoi(input); // 将输入转换为整数
-        printf("请输入新的顾客类型（NORMAL VIP SVIP）：");
-        scanf("%s", new_type);
         CustomerNode *p = customer_list->next;
         while (p != NULL && p->id != id)
         {
@@ -387,21 +390,49 @@ void Adjust_Customer_Type()
             printf("未找到该顾客！\n");
             continue;
         }
+        
+        printf("请输入新的顾客类型（normal vip svip）：");
+        scanf("%s", new_type);
         strcpy(p->type, new_type);
-        system("cls");
-        printf("顾客类型已修改！\n");
+
+        printf("顾客类型已修改！\n\n");
     }
     Create_CustomerInfo_File();
+}
+
+// 从all_category_list中删除商品信息
+void Delete_Good_From_System(char *good_name)
+{
+    AllCategoryNode *allListptr = all_category_list->next;
+    while (allListptr != NULL)
+    {
+        CategoryList category_list = allListptr->categorylist;
+        CategoryNode *categoryListptr = category_list->next;
+        while (categoryListptr != NULL)
+        {
+            if (strcmp(categoryListptr->good.good_name, good_name) == 0)
+            {
+                Delete_CategoryList(&category_list, good_name); // 删除商品
+                printf("商品 %s 已删除！按回车键继续...\n", good_name);
+                return;
+            }
+            categoryListptr = categoryListptr->next;
+        }
+        allListptr = allListptr->next;
+    }
+    printf("未找到名称为 %s 的商品！\n", good_name);
+    // 如果商品不存在，则不进行删除操作
+
 }
 
 // 管理商品售价
 void Set_Good_Price()
 {
     system("cls");
-    printf("商品售价设置：\n已有的所有商品信息如下：\n");
+
     // 先显示所有商品信息
     Print_AllCategoryList(all_category_list);
-    
+    printf("商品售价设置：\n已有的所有商品信息如上所示，供参考：\n");
     //循环处理，输入#退出
     while (1)
     {
@@ -453,10 +484,10 @@ void Set_Good_Price()
 void Set_Good_Promotion_Info()
 {
     system("cls");
-    printf("商品促销信息设置：\n已有的所有商品信息如下：\n");
+
     // 先显示所有商品信息
     Print_AllCategoryList(all_category_list);
-    
+    printf("商品促销信息设置：\n已有的所有商品信息如上所示，供参考：\n");
     //循环处理，输入#退出
     while (1)
     {
@@ -521,8 +552,8 @@ void Set_Good_Promotion_Info()
     }
 
 
-    
-    
-    
+
+
+
 
 }

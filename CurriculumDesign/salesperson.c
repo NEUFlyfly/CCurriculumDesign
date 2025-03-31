@@ -15,8 +15,26 @@ extern SaleList sale_record;
 extern PurchaseList purchase_record;
 extern CustomerList customer_list;
 
-void Sale(int customer_id, char *good_name, int quantity)
+#define NORMAL_DISCOUNT 1.0
+#define VIP_DISCOUNT 0.9
+#define SVIP_DISCOUNT 0.8
+
+void Sale(int customer_id, char *good_name, int quantity)// 向id为customer_id的顾客一次销售商品good_name，数量为quantity
 {
+    static int opened = 0; // 用于判断是否第一次调用Sale函数，如果是第一次调用，则清空saleInfo.txt文件
+    if (opened == 0)
+    {
+        FILE *fp = fopen("saleInfo.txt", "w");
+        if (fp == NULL)
+        {
+            printf("文件打开失败！\n");
+            exit(1);
+        }
+        fclose(fp);
+        opened = 1; // 设置为1，表示已经清空过文件
+    }
+    
+
     char current_time[10];
     GetCurrentTime(current_time); // 获取当前时间
 
@@ -106,7 +124,17 @@ void Sale(int customer_id, char *good_name, int quantity)
         perror("文件打开失败");
         return;
     }
-    fprintf(fp, "%d %s %s %.2f %d %s\n", customer_id, customer_ptr->name, good_name, sale.sale_price, quantity, current_time);
+    // 按顾客星级打折
+    float discount = NORMAL_DISCOUNT;
+    if(strcmp(customer_ptr->type, "vip") == 0)
+    {
+        discount = VIP_DISCOUNT;
+    }
+    else if(strcmp(customer_ptr->type, "svip") == 0)
+    {
+        discount = SVIP_DISCOUNT;
+    }
+    fprintf(fp, "%d %s %s %.2f %d %s\n", customer_id, customer_ptr->name, good_name, sale.sale_price * discount, quantity, current_time);
     fclose(fp);
     
 }

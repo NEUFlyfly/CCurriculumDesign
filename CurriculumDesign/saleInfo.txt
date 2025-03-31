@@ -1,4 +1,2 @@
-pingguo 7 20 
-xiangjiao 12 10
-boluo 15 8
-li 9 12
+3 yzz3 apple 4.00 20 0354
+2 yzz2 apple 5.00 1 0438

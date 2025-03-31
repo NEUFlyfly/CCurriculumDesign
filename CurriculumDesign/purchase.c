@@ -1,5 +1,7 @@
 #include "purchase.h"
 #include "stdlib.h"
+#include "stdio.h"
+#include <string.h>
 // 创建空的Purchase链表
 void Init_PurchaseList(PurchaseList *list)
 {

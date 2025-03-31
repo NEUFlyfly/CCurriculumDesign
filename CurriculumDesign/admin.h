@@ -18,5 +18,5 @@ void Adjust_Customer_Type();
 void Create_CustomerInfo_File();
 void Set_Good_Price();
 void Set_Good_Promotion_Info();
-
+void Delete_Good_From_System(char *good_name);
 #endif // ADMIN_H_INCLUDED

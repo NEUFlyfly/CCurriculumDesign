@@ -1,9 +1,1 @@
-food apple 2.50 100 0000 supplier1
-food banana 1.50 200 0000 supplier1
-food orange 3.00 150 0000 supplier2
-drink cola 2.00 300 0000 supplier3
-drink milk 5.00 100 0000 supplier4
-drink juice 3.00 200 0000 supplier5
-snack chocolate 10.00 50 0000 supplier6
-snack chips 6.00 100 0000 supplier7
-snack biscuit 5.00 200 0000 supplier8
+fruit apple 50.00 23023 0027 supplier
