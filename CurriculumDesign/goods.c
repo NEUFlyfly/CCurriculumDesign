@@ -4,126 +4,69 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-// 创建空的Category链表
-void Init_CategoryList(CategoryList *list)
+// 初始化带头结点的商品链表
+void Init_AllGoodList(AllGoodList *list)
 {
-    *list = (CategoryList)malloc(sizeof(CategoryNode));
+    *list = (AllGoodList)malloc(sizeof(GoodNode)); // 分配头结点内存
     if (*list == NULL)
     {
         printf("内存分配失败！\n");
         exit(1);
     }
-    (*list)->next = NULL;
+    (*list)->next = NULL; // 初始化头结点的指针域为NULL
 }
 
-// 插入新的商品到Category链表，头插法
-void Insert_CategoryList(CategoryList *list, Good good)
+// 插入商品节点到链表中，头插法
+void Insert_AllGoodList(AllGoodList *list, GoodNode good)
 {
-    CategoryNode *newnode = (CategoryNode *)malloc(sizeof(CategoryNode));
-    if (newnode == NULL)
+    GoodNode *new_node = (GoodNode *)malloc(sizeof(GoodNode)); // 分配新节点内存
+    if (new_node == NULL)
     {
         printf("内存分配失败！\n");
         exit(1);
     }
-    newnode->good = good;
-    newnode->next = (*list)->next;
-    (*list)->next = newnode;
+    *new_node = good;               // 复制商品信息到新节点
+    new_node->next = (*list)->next; // 新节点的指针域指向头结点的下一个节点
+    (*list)->next = new_node;       // 头结点的指针域指向新节点
 }
 
-// 从Category链表中删除指定商品节点
-void Delete_CategoryList(CategoryList *list, char *good_name)
+// 删除商品链表中的指定商品节点
+// 成功返回1，失败返回0
+// ... existing code ...
+int Delete_AllGoodList(AllGoodList *list, int id)
 {
-    CategoryNode *prev = *list;
-    CategoryNode *curr = (*list)->next;
-
-    while (curr != NULL && strcmp(curr->good.good_name, good_name) != 0)
-    {
-        prev = curr;
-        curr = curr->next;
-    }
-
-    if (curr == NULL)
-    {
-        printf("未找到该商品！\n");
-        return;
-    }
-
-    prev->next = curr->next;
-    free(curr);
-}
-
-// 创建空的AllCategory链表
-void Init_AllCategoryList(AllCategoryList *list)
-{
-    *list = (AllCategoryList)malloc(sizeof(AllCategoryNode));
-    if (*list == NULL)
-    {
-        printf("内存分配失败！\n");
-        exit(1);
-    }
-    (*list)->next = NULL;
-}
-
-// 插入新的商品类别到AllCategory链表，头插法
-void Insert_AllCategoryList(AllCategoryList *list, CategoryList categorylist, char *category)
-{
-    AllCategoryNode *newnode = (AllCategoryNode *)malloc(sizeof(AllCategoryNode));
-    if (newnode == NULL)
-    {
-        printf("内存分配失败！\n");
-        exit(1);
-    }
-    newnode->categorylist = categorylist;
-    strcpy(newnode->category, category);
-    newnode->next = (*list)->next;
-    (*list)->next = newnode;
-}
-
-// 从AllCategory链表中删除指定类别的商品链表
-void Delete_AllCategoryList(AllCategoryList *list, char *category)
-{
-    AllCategoryNode *p = *list, *q;
-    while (p->next != NULL && strcmp(p->next->category, category) != 0)
-    {
-        p = p->next;
-    }
-    if (p->next == NULL)
-    {
-        printf("未找到该类别！\n");
-        return;
-    }
-    q = p->next;
-    p->next = q->next;
-    free(q);
-}
-
-// 打印AllCategory链表的所有商品信息
-void Print_AllCategoryList(AllCategoryList list)
-{
-    AllCategoryNode *p = list->next;
-    while (p != NULL)
-    {
-        printf("[类别]:%s\n", p->category);
-        CategoryNode *q = p->categorylist->next;
-        while (q != NULL)
-        {
-            printf("    商品名称：%s\n", q->good.good_name);
-            printf("    商品类别：%s\n", q->good.category);
-            printf("    生产厂家：%s\n", q->good.manufacturer);
-            printf("    销售价格：%.2f\n", q->good.price);
-            printf("    库存数量：%d\n", q->good.stock);
-            printf("    是否促销：%s\n", q->good.is_promotion ? "是" : "否");
-            if (q->good.is_promotion)
-            {
-                printf("    促销价格：%.2f\n", q->good.promotion_price);
-            }
-            else printf("    正常价格：%.2f\n", q->good.price);
-            printf("\n");
-            q = q->next;
+    GoodNode *p = *list; // p指向头结点，这里修改为指向头结点而不是头结点的下一个节点
+    while (p->next != NULL)
+    { // 遍历链表
+        if (p->next->id == id)
+        {                             // 如果找到要删除的节点
+            GoodNode *temp = p->next; // 临时保存要删除的节点
+            p->next = temp->next;     // 修改指针域，跳过要删除的节点
+            free(temp);               // 释放内存
+            return 1;                 // 删除成功，返回 1
         }
-        p = p->next;
-        printf("\n");
+        p = p->next; // 继续遍历下一个节点
     }
+    return 0; // 未找到要删除的节点，返回 0
 }
 
+// 打印商品链表中的所有商品信息
+void Print_AllGoodList(AllGoodList list)
+{
+    GoodNode *p = list->next; // p指向头结点
+    if (p == NULL)
+    { // 如果链表为空
+        printf("商品信息为空！\n");
+        return; // 退出函数
+    }
+    printf("商品信息如下：\n");
+    printf("%-5s %-20s %-15s %-20s %-8s %-6s %-12s %-10s\n", "编号", \
+        "名称", "类别", "生产厂家", "价格", "库存", "促销状态", "促销价格");
+    while (p != NULL)
+    { // 遍历链表，一行一个商品节点
+        // 设置商品信息对齐
+        printf("%-5d %-20s %-15s %-20s %-8.2f %-6d %-12d %-10.2f\n", p->id, p->good_name, p->category,
+               p->manufacturer, p->price, p->stock, p->is_promotion, p->promotion_price);
+        p = p->next; // 移动到下一个节点
+    }
+}

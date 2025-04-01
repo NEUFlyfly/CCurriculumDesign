@@ -9,8 +9,8 @@ typedef struct SaleNode
     int quantity;       // 销售数量
     struct SaleNode *next;
 } SaleNode, *SaleList;
-
+void Sale(int customer_id, int good_id, int quantity);
 void Init_SaleList(SaleList *list);
 void Insert_SaleList(SaleList *list, SaleNode sale);
-
+void ResetSaleId();
 #endif // SALE_H_INCLUDED

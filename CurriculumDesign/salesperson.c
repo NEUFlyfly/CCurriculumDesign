@@ -5,12 +5,11 @@
 #include "customer.h"
 #include "system.h"
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-extern AllCategoryList all_category_list;
+extern AllGoodList all_good_list;
 extern SaleList sale_record;
 extern PurchaseList purchase_record;
 extern CustomerList customer_list;
@@ -19,122 +18,42 @@ extern CustomerList customer_list;
 #define VIP_DISCOUNT 0.9
 #define SVIP_DISCOUNT 0.8
 
-void Sale(int customer_id, char *good_name, int quantity)// 向id为customer_id的顾客一次销售商品good_name，数量为quantity
+// 销售商品
+void Sale_To_Customer(int customer_id, char *good_name, int quantity)
 {
-    static int opened = 0; // 用于判断是否第一次调用Sale函数，如果是第一次调用，则清空saleInfo.txt文件
-    if (opened == 0)
+    // 决策good_name应该是对应all_good_list中的哪个节点
+    // 节点挑选的原则是选取所有good_name相同，quntity足够且price最高的节点
+    AllGoodList p = all_good_list->next;
+    AllGoodList best_good = NULL;
+    int found_good = 0; // 标记是否找到商品
+    while (p != NULL)   // 遍历all_good_list，找到所有good_name相同，quntity足够且price或者promotion_price最高的节点
     {
-        FILE *fp = fopen("saleInfo.txt", "w");
-        if (fp == NULL)
+        if (strcmp(p->good_name, good_name) == 0)
         {
-            printf("文件打开失败！\n");
-            exit(1);
-        }
-        fclose(fp);
-        opened = 1; // 设置为1，表示已经清空过文件
-    }
-    
-
-    char current_time[10];
-    GetCurrentTime(current_time); // 获取当前时间
-
-    // 0. 函数合法性检查，检查顾客id是否存在，商品名称是否存在，库存是否足够
-    int id_exist = 0, good_exist = 0, stock_enough = 0;
-    CustomerNode *customer_ptr = customer_list->next;
-    while (customer_ptr != NULL) // 若顾客id存在，则customer_ptr指向该顾客，否则指向NULL
-    {
-        if (customer_ptr->id == customer_id)
-        {
-            id_exist = 1; // 顾客id存在
-            break;
-        }
-        customer_ptr = customer_ptr->next;
-    }
-    if (customer_ptr == NULL)
-    {
-        printf("顾客id不存在！\n");
-        return;
-    }
-    // 查找商品名称是否存在
-    AllCategoryNode *category_ptr = all_category_list->next;
-    CategoryNode *good_ptr = NULL;
-    while (category_ptr != NULL) // 若商品名称存在，则category_ptr指向该商品，否则指向NULL
-    {
-        good_ptr = category_ptr->categorylist->next;
-        while (good_ptr != NULL)
-        {
-            if (strcmp(good_ptr->good.good_name, good_name) == 0)
+            found_good = 1; // 找到商品
+            if (p->stock >= quantity)
             {
-                good_exist = 1; // 商品名称存在
-                if (good_ptr->good.stock >= quantity) // 库存足够
+                // 比较 price 和 promotion_price 中的最大值
+                float current_max_price = (p->price > p->promotion_price) ? p->price : p->promotion_price;
+                float best_max_price = (best_good != NULL) ? ((best_good->price > best_good->promotion_price) ? best_good->price : best_good->promotion_price) : 0;
+
+                if (best_good == NULL || current_max_price > best_max_price)
                 {
-                    stock_enough = 1;
+                    best_good = p;
                 }
-                break;
             }
-            good_ptr = good_ptr->next;
         }
-        if (stock_enough == 1)
-        {
-            break; // 找到商品且库存足够，退出循环
-        }
-        category_ptr = category_ptr->next;
+        p = p->next;
     }
-    if (category_ptr == NULL || good_ptr == NULL)
+    if (!found_good)
     {
-        printf("商品名称不存在！\n");
-        return;
+        printf("没有找到该商品！\n");
+        return; // 没有找到该商品，直接返回
     }
-    if (stock_enough == 0)
+    if (!best_good)
     {
-        printf("库存不足！\n");
-        return;
+        printf("商品库存不足！\n");
+        return; // 商品库存不足，直接返回
     }
-    
-    // 三者任意一个不满足则退出函数
-    if(id_exist == 0 || good_exist == 0 || stock_enough == 0)
-    {
-        return;
-    }
-
-    // 1. 创建新的销售记录
-    SaleNode sale;
-    strcpy(sale.good_name, good_name);
-    strcpy(sale.sale_time, current_time); // 使用当前时间
-    //检查该商品是否促销
-    if(good_ptr->good.is_promotion == 1)
-    {
-        sale.sale_price = good_ptr->good.promotion_price;
-    }
-    else
-    {
-        sale.sale_price = good_ptr->good.price;
-    }
-    sale.quantity = quantity;
-    Insert_SaleList(&sale_record, sale);
-    // 2. 更新商品库存
-
-    good_ptr->good.stock -= quantity;
-    printf("销售成功！\n");
-
-    // 3. 保存销售记录到saleInfo.txt，格式：顾客id 顾客姓名 商品名称 销售单价 销售数量 销售时间
-    FILE *fp = fopen("saleInfo.txt", "a");
-    if (fp == NULL)
-    {
-        perror("文件打开失败");
-        return;
-    }
-    // 按顾客星级打折
-    float discount = NORMAL_DISCOUNT;
-    if(strcmp(customer_ptr->type, "vip") == 0)
-    {
-        discount = VIP_DISCOUNT;
-    }
-    else if(strcmp(customer_ptr->type, "svip") == 0)
-    {
-        discount = SVIP_DISCOUNT;
-    }
-    fprintf(fp, "%d %s %s %.2f %d %s\n", customer_id, customer_ptr->name, good_name, sale.sale_price * discount, quantity, current_time);
-    fclose(fp);
-    
+    Sale(customer_id, best_good->id, quantity); // 调用Sale函数，将best_good的id和quantity传入
 }

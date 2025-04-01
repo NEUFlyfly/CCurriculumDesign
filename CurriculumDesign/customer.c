@@ -63,14 +63,15 @@ int Delete_CustomerList(CustomerList *list, int id)
 
 void Print_CustomerList(CustomerList list)
 {
+    // 打印表头
     printf("[顾客信息列表]：\n");
+    printf("    %-8s%-12s%-10s%-15s\n", "顾客id", "顾客姓名", "顾客类型", "顾客联系方式");
+    // 打印分割线
     CustomerNode *p = list->next;
     while (p != NULL)
     {
-        printf("    顾客id：%-3d", p->id);
-        printf("  顾客姓名：%-10s", p->name);
-        printf("  顾客类型：%-5s", p->type);
-        printf("  顾客联系方式：%-10s\n", p->contact);
+        // 打印顾客信息
+        printf("    %-8d%-12s%-10s%-15s\n", p->id, p->name, p->type, p->contact);
         p = p->next;
     }
 }
